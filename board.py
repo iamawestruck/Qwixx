@@ -4,7 +4,8 @@ class Board:
     green = None
     blue = None
     penalty = None
-    def Board(self):
+
+    def __init__(self):
         self.red=[]
         self.yellow = []
         self.green = []
