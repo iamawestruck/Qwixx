@@ -2,14 +2,13 @@ from player import Player
 from game import Game
 
 
-
+game = Game()
 
 order = []
 
-def playerCount(name):
-
 
 def diceRoll():
+    pass
 
 
 # First ask for number of players

@@ -1,4 +1,13 @@
 from player import Player
 
 class Game:
-    pass
+    playerCount = None
+    
+    def getPlayerCount(self):
+        self.playerCount = int(input("How many players will be joining?"))
+    
+    
+    def Game(self):
+        self.getPlayerCount()
+        print(self.playerCount)
+    
