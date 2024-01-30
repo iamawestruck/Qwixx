@@ -1,5 +1,6 @@
 from player import Player
 import random
+import time
 from GUI import *
 
 
@@ -26,18 +27,19 @@ class Game:
         self.boardsGUI[0].resize(800, 600)
         self.boardsGUI[0].show()
         self.diceGUI = DiceRoll()
-
+        self.diceGUI.resize(800,600)
+        self.diceGUI.show()
+        self.rollDice()
         sys.exit(app.exec())
-
-
-
 
     def rollDice(self):
         self.dice = [random.randint(1, 6) for _ in range(6)]
-        self.diceGUI.updateDice(self.dice)
+        self.diceGUI.updateDiceGUI(self.dice)
 
 
 
 
 
 game = Game()
+time.sleep(2)
+game.rollDice()

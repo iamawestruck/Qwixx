@@ -2,6 +2,7 @@ import sys
 import random
 from PySide6 import QtCore, QtWidgets, QtGui
 
+
 class GameBoard(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
@@ -47,18 +48,35 @@ class GameBoard(QtWidgets.QWidget):
 class DiceRoll(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
-        self.diceButtons = [QtWidgets.QPushButton(str(Game.dice[i])) for i in range(0, 6)]
+        dice = [0, 1, 2, 3, 4, 5]
+        self.diceButtons = [QtWidgets.QPushButton(str(dice[i])) for i in range(0, 6)]
+        self.layout = QtWidgets.QVBoxLayout(self)
 
+        self.upperButtons = QtWidgets.QWidget()
+        self.middleButtons = QtWidgets.QWidget()
+        self.lowerButtons = QtWidgets.QWidget()
 
-class Container:
-    def __init__(self):
-        super().__init__()
+        self.upperButtons.layout = QtWidgets.QHBoxLayout(self.upperButtons)
+        self.middleButtons.layout = QtWidgets.QHBoxLayout(self.middleButtons)
+        self.lowerButtons.layout = QtWidgets.QHBoxLayout(self.lowerButtons)
 
-        app = QtWidgets.QApplication([])
+        self.upperButtons.layout.addWidget(self.diceButtons[0])
+        self.upperButtons.layout.addWidget(self.diceButtons[1])
 
-        widget = GameBoard()
-        widget.resize(800, 600)
-        widget.show()
+        self.diceButtons[2].setStyleSheet("background-color : red")
+        self.diceButtons[3].setStyleSheet("background-color : yellow")
+        self.middleButtons.layout.addWidget(self.diceButtons[2])
+        self.middleButtons.layout.addWidget(self.diceButtons[3])
 
-        sys.exit(app.exec())
+        self.diceButtons[4].setStyleSheet("background-color : green")
+        self.diceButtons[5].setStyleSheet("background-color : blue")
+        self.lowerButtons.layout.addWidget(self.diceButtons[4])
+        self.lowerButtons.layout.addWidget(self.diceButtons[5])
 
+        self.layout.addWidget(self.upperButtons)
+        self.layout.addWidget(self.middleButtons)
+        self.layout.addWidget(self.lowerButtons)
+
+    def updateDiceGUI(self, values):
+        for i in range(len(self.diceButtons)):
+            self.diceButtons[i].setText(str(values[i]))
