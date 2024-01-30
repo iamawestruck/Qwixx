@@ -2,7 +2,6 @@ import sys
 import random
 from PySide6 import QtCore, QtWidgets, QtGui
 
-
 class GameBoard(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
@@ -45,10 +44,21 @@ class GameBoard(QtWidgets.QWidget):
         self.layout.addWidget(self.blueButtonGroup)
 
 
-app = QtWidgets.QApplication([])
+class DiceRoll(QtWidgets.QWidget):
+    def __init__(self):
+        super().__init__()
+        self.diceButtons = [QtWidgets.QPushButton(str(Game.dice[i])) for i in range(0, 6)]
 
-widget = GameBoard()
-widget.resize(800, 600)
-widget.show()
 
-sys.exit(app.exec())
+class Container:
+    def __init__(self):
+        super().__init__()
+
+        app = QtWidgets.QApplication([])
+
+        widget = GameBoard()
+        widget.resize(800, 600)
+        widget.show()
+
+        sys.exit(app.exec())
+

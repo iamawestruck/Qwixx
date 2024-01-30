@@ -1,5 +1,5 @@
 from player import Player
-from game import Game
+
 import PySide6.QtCore
 
 game = Game()
