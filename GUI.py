@@ -31,7 +31,7 @@ class GameBoard(QtWidgets.QWidget):
             self.redButtons[i].setStyleSheet("background-color : red")
             self.yellowButtons[i].setStyleSheet("background-color : yellow")
             self.greenButtons[i].setStyleSheet("background-color : green")
-            self.blueButtons[i].setStyleSheet("background-color : blue")
+            self.blueButtons[i].setStyleSheet("background-color : #0080ff")
 
             self.redButtonGroup.layout.addWidget(self.redButtons[i])
             self.yellowButtonGroup.layout.addWidget(self.yellowButtons[i])
@@ -69,7 +69,7 @@ class DiceRoll(QtWidgets.QWidget):
         self.middleButtons.layout.addWidget(self.diceButtons[3])
 
         self.diceButtons[4].setStyleSheet("background-color : green")
-        self.diceButtons[5].setStyleSheet("background-color : blue")
+        self.diceButtons[5].setStyleSheet("background-color : #0080ff")
         self.lowerButtons.layout.addWidget(self.diceButtons[4])
         self.lowerButtons.layout.addWidget(self.diceButtons[5])
 
