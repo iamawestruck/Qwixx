@@ -6,19 +6,17 @@ class GameBoard(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
 
+        self.redButtons = [QtWidgets.QPushButton(str(i)) for i in range(2, 13)]
+        # self.redButtons = [button.setStyleSheet("background-color : red") for button in self.redButtons]
 
+        self.yellowButtons = [QtWidgets.QPushButton(str(i)) for i in range(2, 13)]
+        # self.yellowButtons = [button.setStyleSheet("background-color : yellow") for button in self.yellowButtons]
 
-        redButtons = [QtWidgets.QPushButton(str(i)) for i in range(2, 13)]
-        redButtons = [button.setStyleSheet("background-color : red") for button in redButtons]
+        self.greenButtons = [QtWidgets.QPushButton(str(i)) for i in range(12, 1, -1)]
+        # self.greenButtons = [button.setStyleSheet("background-color : green") for button in self.greenButtons]
 
-        yellowButtons = [QtWidgets.QPushButton(str(i)) for i in range(2, 13)]
-        yellowButtons = [button.setStyleSheet("background-color : yellow") for button in yellowButtons]
-
-        greenButtons = [QtWidgets.QPushButton(str(i)) for i in range(12, 1, -1)]
-        greenButtons = [button.setStyleSheet("background-color : green") for button in greenButtons]
-
-        blueButtons = [QtWidgets.QPushButton(str(i)) for i in range(12, 1, -1)]
-        blueButtons = [button.setStyleSheet("background-color : blue") for button in blueButtons]
+        self.blueButtons = [QtWidgets.QPushButton(str(i)) for i in range(12, 1, -1)]
+        # self.blueButtons = [button.setStyleSheet("background-color : blue") for button in self.blueButtons]
 
         self.redButtonGroup = QtWidgets.QWidget()
         self.redButtonGroup.layout = QtWidgets.QHBoxLayout(self.redButtonGroup)
@@ -32,11 +30,16 @@ class GameBoard(QtWidgets.QWidget):
         self.blueButtonGroup = QtWidgets.QWidget()
         self.blueButtonGroup.layout = QtWidgets.QHBoxLayout(self.blueButtonGroup)
 
-        for i in range(0,12):
-            self.redButtonGroup.layout.addWidget(redButtons[i])
-            self.yellowButtonGroup.layout.addWidget(yellowButtons[i])
-            self.greenButtonGroup.layout.addWidget(greenButtons[i])
-            self.blueButtonGroup.layout.addWidget(blueButtons[i])
+        for i in range(0,11):
+            self.redButtons[i].setStyleSheet("background-color : red")
+            self.yellowButtons[i].setStyleSheet("background-color : yellow")
+            self.greenButtons[i].setStyleSheet("background-color : green")
+            self.blueButtons[i].setStyleSheet("background-color : blue")
+
+            self.redButtonGroup.layout.addWidget(self.redButtons[i])
+            self.yellowButtonGroup.layout.addWidget(self.yellowButtons[i])
+            self.greenButtonGroup.layout.addWidget(self.greenButtons[i])
+            self.blueButtonGroup.layout.addWidget(self.blueButtons[i])
 
         self.layout = QtWidgets.QVBoxLayout(self)
         self.layout.addWidget(self.redButtonGroup)
