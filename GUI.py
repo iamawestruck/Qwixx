@@ -31,22 +31,22 @@ class GameBoard(QtWidgets.QWidget):
 
         for i in range (0,11):
             redButton = QtWidgets.QPushButton(str(i+2))
-            redButton.setStyleSheet("background-color : red")
+            redButton.setStyleSheet("background-color : #ff6961")
             self.redButtons.addButton(redButton, i)
             self.redButtonGroup.layout.addWidget(redButton)
 
             yellowButton = QtWidgets.QPushButton(str(i + 2))
-            yellowButton.setStyleSheet("background-color : yellow")
+            yellowButton.setStyleSheet("background-color : #fdfd96")
             self.yellowButtons.addButton(yellowButton, i)
             self.yellowButtonGroup.layout.addWidget(yellowButton)
 
             greenButton = QtWidgets.QPushButton(str(12 - i))
-            greenButton.setStyleSheet("background-color : green")
+            greenButton.setStyleSheet("background-color : #77dd77")
             self.greenButtons.addButton(greenButton, i)
             self.greenButtonGroup.layout.addWidget(greenButton)
 
             blueButton = QtWidgets.QPushButton(str(12 - i))
-            blueButton.setStyleSheet("background-color : #0080ff")
+            blueButton.setStyleSheet("background-color : #90d4ed")
             self.blueButtons.addButton(blueButton, i)
             self.blueButtonGroup.layout.addWidget(blueButton)
 
@@ -109,13 +109,13 @@ class DiceRoll(QtWidgets.QWidget):
         self.upperButtons.layout.addWidget(self.diceButtons[0])
         self.upperButtons.layout.addWidget(self.diceButtons[1])
 
-        self.diceButtons[2].setStyleSheet("background-color : red")
-        self.diceButtons[3].setStyleSheet("background-color : yellow")
+        self.diceButtons[2].setStyleSheet("background-color : #ff6961")
+        self.diceButtons[3].setStyleSheet("background-color : #fdfd96")
         self.middleButtons.layout.addWidget(self.diceButtons[2])
         self.middleButtons.layout.addWidget(self.diceButtons[3])
 
-        self.diceButtons[4].setStyleSheet("background-color : green")
-        self.diceButtons[5].setStyleSheet("background-color : #0080ff")
+        self.diceButtons[4].setStyleSheet("background-color : #77dd77")
+        self.diceButtons[5].setStyleSheet("background-color : #90d4ed")
         self.lowerButtons.layout.addWidget(self.diceButtons[4])
         self.lowerButtons.layout.addWidget(self.diceButtons[5])
 
