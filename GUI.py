@@ -55,6 +55,7 @@ class DiceRoll(QtWidgets.QWidget):
         dice = [0, 1, 2, 3, 4, 5]
         self.diceButtons = [QtWidgets.QPushButton(str(dice[i])) for i in range(0, 6)]
         self.rollButton = QtWidgets.QPushButton("Roll")
+        self.rollButton.clicked.connect(self.updateDiceGUI)
         self.layout = QtWidgets.QVBoxLayout(self)
 
         self.upperButtons = QtWidgets.QWidget()
@@ -87,9 +88,12 @@ class DiceRoll(QtWidgets.QWidget):
         self.layout.addWidget(self.lowerButtons)
         self.layout.addWidget(self.lowestButton)
 
-    def updateDiceGUI(self, values):
+
+    def updateDiceGUI(self):
+        global game
+        game.rollDice()
         for i in range(len(self.diceButtons)):
-            self.diceButtons[i].setText(str(values[i]))
+            self.diceButtons[i].setText(str(game.dice[i]))
 
 
 def startUp():
@@ -99,7 +103,8 @@ def startUp():
     boardsGUI.append(GameBoard())
     diceGUI.show()
     boardsGUI[0].show()
-    diceGUI.updateDiceGUI(game.dice)
+    diceGUI.updateDiceGUI()
+
 
 
 if __name__ == "__main__":

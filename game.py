@@ -2,8 +2,6 @@ from player import Player
 import random
 import time
 
-global currentdice
-
 class Game:
     playerCount = None
     # dice array order is white1, white2, red, yellow, green, blue
