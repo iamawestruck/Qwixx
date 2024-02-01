@@ -1,7 +1,11 @@
 import sys
 import random
 from PySide6 import QtCore, QtWidgets, QtGui
+from game import Game
 
+game = None
+diceGUI = None
+boardsGUI = []
 
 class GameBoard(QtWidgets.QWidget):
     def __init__(self):
@@ -50,15 +54,18 @@ class DiceRoll(QtWidgets.QWidget):
         super().__init__()
         dice = [0, 1, 2, 3, 4, 5]
         self.diceButtons = [QtWidgets.QPushButton(str(dice[i])) for i in range(0, 6)]
+        self.rollButton = QtWidgets.QPushButton("Roll")
         self.layout = QtWidgets.QVBoxLayout(self)
 
         self.upperButtons = QtWidgets.QWidget()
         self.middleButtons = QtWidgets.QWidget()
         self.lowerButtons = QtWidgets.QWidget()
+        self.lowestButton = QtWidgets.QWidget()
 
         self.upperButtons.layout = QtWidgets.QHBoxLayout(self.upperButtons)
         self.middleButtons.layout = QtWidgets.QHBoxLayout(self.middleButtons)
         self.lowerButtons.layout = QtWidgets.QHBoxLayout(self.lowerButtons)
+        self.lowestButton.layout = QtWidgets.QHBoxLayout(self.lowestButton)
 
         self.upperButtons.layout.addWidget(self.diceButtons[0])
         self.upperButtons.layout.addWidget(self.diceButtons[1])
@@ -73,10 +80,30 @@ class DiceRoll(QtWidgets.QWidget):
         self.lowerButtons.layout.addWidget(self.diceButtons[4])
         self.lowerButtons.layout.addWidget(self.diceButtons[5])
 
+        self.lowestButton.layout.addWidget(self.rollButton)
+
         self.layout.addWidget(self.upperButtons)
         self.layout.addWidget(self.middleButtons)
         self.layout.addWidget(self.lowerButtons)
+        self.layout.addWidget(self.lowestButton)
 
     def updateDiceGUI(self, values):
         for i in range(len(self.diceButtons)):
             self.diceButtons[i].setText(str(values[i]))
+
+
+def startUp():
+    global game, diceGUI, boardsGUI
+    game = Game()
+    diceGUI = DiceRoll()
+    boardsGUI.append(GameBoard())
+    diceGUI.show()
+    boardsGUI[0].show()
+    diceGUI.updateDiceGUI(game.dice)
+
+
+if __name__ == "__main__":
+    app = QtWidgets.QApplication([])
+    startUp()
+    sys.exit(app.exec())
+
