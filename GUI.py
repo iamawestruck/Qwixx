@@ -8,16 +8,14 @@ diceGUI = None
 boardsGUI = []
 
 class GameBoard(QtWidgets.QWidget):
-    def __init__(self):
+    playerNumber = None
+    def __init__(self, playerNumber):
         super().__init__()
-
-        self.redButtons = [QtWidgets.QPushButton(str(i)) for i in range(2, 13)]
-
-        self.yellowButtons = [QtWidgets.QPushButton(str(i)) for i in range(2, 13)]
-
-        self.greenButtons = [QtWidgets.QPushButton(str(i)) for i in range(12, 1, -1)]
-
-        self.blueButtons = [QtWidgets.QPushButton(str(i)) for i in range(12, 1, -1)]
+        self.playerNumber = playerNumber
+        self.redButtons = QtWidgets.QButtonGroup(self)
+        self.yellowButtons = QtWidgets.QButtonGroup(self)
+        self.greenButtons = QtWidgets.QButtonGroup(self)
+        self.blueButtons = QtWidgets.QButtonGroup(self)
 
         self.redButtonGroup = QtWidgets.QWidget()
         self.redButtonGroup.layout = QtWidgets.QHBoxLayout(self.redButtonGroup)
@@ -31,22 +29,62 @@ class GameBoard(QtWidgets.QWidget):
         self.blueButtonGroup = QtWidgets.QWidget()
         self.blueButtonGroup.layout = QtWidgets.QHBoxLayout(self.blueButtonGroup)
 
-        for i in range(0, 11):
-            self.redButtons[i].setStyleSheet("background-color : red")
-            self.yellowButtons[i].setStyleSheet("background-color : yellow")
-            self.greenButtons[i].setStyleSheet("background-color : green")
-            self.blueButtons[i].setStyleSheet("background-color : #0080ff")
+        for i in range (0,11):
+            redButton = QtWidgets.QPushButton(str(i+2))
+            redButton.setStyleSheet("background-color : red")
+            self.redButtons.addButton(redButton, i)
+            self.redButtonGroup.layout.addWidget(redButton)
 
-            self.redButtonGroup.layout.addWidget(self.redButtons[i])
-            self.yellowButtonGroup.layout.addWidget(self.yellowButtons[i])
-            self.greenButtonGroup.layout.addWidget(self.greenButtons[i])
-            self.blueButtonGroup.layout.addWidget(self.blueButtons[i])
+            yellowButton = QtWidgets.QPushButton(str(i + 2))
+            yellowButton.setStyleSheet("background-color : yellow")
+            self.yellowButtons.addButton(yellowButton, i)
+            self.yellowButtonGroup.layout.addWidget(yellowButton)
+
+            greenButton = QtWidgets.QPushButton(str(12 - i))
+            greenButton.setStyleSheet("background-color : green")
+            self.greenButtons.addButton(greenButton, i)
+            self.greenButtonGroup.layout.addWidget(greenButton)
+
+            blueButton = QtWidgets.QPushButton(str(12 - i))
+            blueButton.setStyleSheet("background-color : #0080ff")
+            self.blueButtons.addButton(blueButton, i)
+            self.blueButtonGroup.layout.addWidget(blueButton)
+
+        self.redButtons.idClicked.connect(lambda i: self.boardNumberedColoredButtonClicked(i+2, "red"))
+        self.yellowButtons.idClicked.connect(lambda i: self.boardNumberedColoredButtonClicked(i+2, "yellow"))
+        self.greenButtons.idClicked.connect(lambda i: self.boardNumberedColoredButtonClicked(12-i, "green"))
+        self.blueButtons.idClicked.connect(lambda i: self.boardNumberedColoredButtonClicked(12-i, "blue"))
+
+
+        # for i in range(0, 11):
+        #     self.redButtons[i].clicked.connect(lambda i = i: self.boardNumberedColoredButtonClicked(
+        #         "red", i+2))
+        #     self.yellowButtons[i].clicked.connect(lambda: self.boardNumberedColoredButtonClicked(
+        #         "yellow", self.yellowButtons[i].text()))
+        #     self.greenButtons[i].clicked.connect(lambda: self.boardNumberedColoredButtonClicked(
+        #         "green", self.greenButtons[i].text()))
+        #     self.blueButtons[i].clicked.connect(lambda: self.boardNumberedColoredButtonClicked(
+        #         "blue", self.blueButtons[i].text()))
+        #     self.redButtons[i].setStyleSheet("background-color : red")
+        #     self.yellowButtons[i].setStyleSheet("background-color : yellow")
+        #     self.greenButtons[i].setStyleSheet("background-color : green")
+        #     self.blueButtons[i].setStyleSheet("background-color : #0080ff")
+        #
+        #     self.redButtonGroup.layout.addWidget(self.redButtons[i])
+        #     self.yellowButtonGroup.layout.addWidget(self.yellowButtons[i])
+        #     self.greenButtonGroup.layout.addWidget(self.greenButtons[i])
+        #     self.blueButtonGroup.layout.addWidget(self.blueButtons[i])
 
         self.layout = QtWidgets.QVBoxLayout(self)
         self.layout.addWidget(self.redButtonGroup)
         self.layout.addWidget(self.yellowButtonGroup)
         self.layout.addWidget(self.greenButtonGroup)
         self.layout.addWidget(self.blueButtonGroup)
+
+    def boardNumberedColoredButtonClicked(self, number, color):
+        global game
+        game.players[self.playerNumber].coloredNumber(color, number)
+        print(game.players[self.playerNumber].red)
 
 
 class DiceRoll(QtWidgets.QWidget):
@@ -100,7 +138,8 @@ def startUp():
     global game, diceGUI, boardsGUI
     game = Game()
     diceGUI = DiceRoll()
-    boardsGUI.append(GameBoard())
+    boardsGUI.append(GameBoard(0))
+    game.addPlayer()
     diceGUI.show()
     boardsGUI[0].show()
     diceGUI.updateDiceGUI()

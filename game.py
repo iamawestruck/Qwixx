@@ -6,6 +6,7 @@ class Game:
     playerCount = None
     # dice array order is white1, white2, red, yellow, green, blue
     dice = []
+    players = []
 
     # def getPlayerCount(self):
     #     self.playerCount = int(input("How many players will be joining? \n"))
@@ -18,6 +19,9 @@ class Game:
         # we would go through initializations of each game board.
         variable = 2
         self.rollDice()
+
+    def addPlayer(self):
+        self.players.append(Player())
 
     def rollDice(self):
         self.dice = [random.randint(1, 6) for _ in range(6)]
