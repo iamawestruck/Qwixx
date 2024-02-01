@@ -83,7 +83,7 @@ class GameBoard(QtWidgets.QWidget):
 
     def boardNumberedColoredButtonClicked(self, number, color):
         global game
-        game.players[self.playerNumber].coloredNumber(color, number)
+        game.players[self.playerNumber].setColoredNumber(color, number)
         print(game.players[self.playerNumber].red)
 
 
