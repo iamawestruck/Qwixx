@@ -2,7 +2,6 @@ from player import Player
 import random
 import time
 
-
 class Game:
     playerCount = None
     # dice array order is white1, white2, red, yellow, green, blue
@@ -12,6 +11,7 @@ class Game:
     # def getPlayerCount(self):
     #     self.playerCount = int(input("How many players will be joining? \n"))
 
+    
     def __init__(self):
         # self.getPlayerCount()
         # print(self.playerCount)

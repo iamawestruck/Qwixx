@@ -87,7 +87,22 @@ class GameBoard(QtWidgets.QWidget):
         global game
         game.players[self.playerNumber].setColoredNumber(color, number)
         print(game.players[self.playerNumber].red)
+        self.updateGameBoardGUI()
 
+    def updateGameBoardGUI(self):
+        board = game.players[self.playerNumber]
+        redButtonGroupChildren = self.redButtonGroup.children()
+        for value in board.red:
+            redButtonGroupChildren[value-1].setStyleSheet("background-color : #660500")
+        yellowButtonGroupChildren = self.yellowButtonGroup.children()
+        for value in board.yellow:
+            yellowButtonGroupChildren[value-1].setStyleSheet("background-color : #646402")
+        greenButtonGroupChildren = self.greenButtonGroup.children()
+        for value in board.green:
+            greenButtonGroupChildren[13-value].setStyleSheet("background-color : #145214")
+        blueButtonGroupChildren = self.blueButtonGroup.children()
+        for value in board.blue:
+            blueButtonGroupChildren[13-value].setStyleSheet("background-color : #0e4458")
 
 
 class DiceRoll(QtWidgets.QWidget):
@@ -133,7 +148,11 @@ class DiceRoll(QtWidgets.QWidget):
         global game
         game.rollDice()
         for i in range(len(self.diceButtons)):
-            self.diceButtons[i].setText(str(game.dice[i]))
+            if self.diceButtons[i] != None:
+                self.diceButtons[i].setText(str(game.dice[i]))
+            else:
+                self.diceButtons[i].setText("")
+                self.diceButtons[i].setStyleSheet("background-color: #333333")
 
 
 def startUp():
