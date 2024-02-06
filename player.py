@@ -28,18 +28,26 @@ class Player:
     def verifyColoredNumber(self, color, number):
         match color:
             case "red":
-                if len(self.red) == 0:
+                if number == 12:
+                    return len(self.red) > 4
+                elif len(self.red) == 0:
                     return True
                 return self.red[-1] < number
             case "yellow":
-                if len(self.yellow) == 0:
+                if number == 12:
+                    return len(self.yellow) > 4
+                elif len(self.yellow) == 0:
                     return True
                 return self.yellow[-1] < number
             case "green":
-                if len(self.green) == 0:
+                if number == 2:
+                    return len(self.green) > 4
+                elif len(self.green) == 0:
                     return True
                 return self.green[-1] > number
             case "blue":
-                if len(self.blue) == 0:
+                if number == 2:
+                    return len(self.blue) > 4
+                elif len(self.blue) == 0:
                     return True
                 return self.blue[-1] > number

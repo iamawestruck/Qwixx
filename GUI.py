@@ -7,8 +7,10 @@ game = None
 diceGUI = None
 boardsGUI = []
 
+
 class GameBoard(QtWidgets.QWidget):
     playerNumber = None
+
     def __init__(self, playerNumber):
         super().__init__()
         self.playerNumber = playerNumber
@@ -29,7 +31,7 @@ class GameBoard(QtWidgets.QWidget):
         self.blueButtonGroup = QtWidgets.QWidget()
         self.blueButtonGroup.layout = QtWidgets.QHBoxLayout(self.blueButtonGroup)
 
-        for i in range (0,11):
+        for i in range(0, 11):
             redButton = QtWidgets.QPushButton(str(i+2))
             redButton.setStyleSheet("background-color : #ff6961")
             self.redButtons.addButton(redButton, i)
@@ -87,6 +89,7 @@ class GameBoard(QtWidgets.QWidget):
         print(game.players[self.playerNumber].red)
 
 
+
 class DiceRoll(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
@@ -126,7 +129,6 @@ class DiceRoll(QtWidgets.QWidget):
         self.layout.addWidget(self.lowerButtons)
         self.layout.addWidget(self.lowestButton)
 
-
     def updateDiceGUI(self):
         global game
         game.rollDice()
@@ -143,7 +145,6 @@ def startUp():
     diceGUI.show()
     boardsGUI[0].show()
     diceGUI.updateDiceGUI()
-
 
 
 if __name__ == "__main__":
