@@ -24,4 +24,4 @@ class Game:
         self.players.append(Player())
 
     def rollDice(self):
-        self.dice = [random.randint(1, 6) for _ in range(6)]
+        self.dice = [random.randint(1, 6) for i in range(6) if self.dice is not None]
