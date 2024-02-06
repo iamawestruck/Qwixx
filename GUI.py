@@ -76,18 +76,33 @@ class GameBoard(QtWidgets.QWidget):
         #     self.yellowButtonGroup.layout.addWidget(self.yellowButtons[i])
         #     self.greenButtonGroup.layout.addWidget(self.greenButtons[i])
         #     self.blueButtonGroup.layout.addWidget(self.blueButtons[i])
+        self.submitButton = QtWidgets.QPushButton("Submit")
+        self.submitButton.clicked.connect(self.submitButtonClicked)
 
         self.layout = QtWidgets.QVBoxLayout(self)
         self.layout.addWidget(self.redButtonGroup)
         self.layout.addWidget(self.yellowButtonGroup)
         self.layout.addWidget(self.greenButtonGroup)
         self.layout.addWidget(self.blueButtonGroup)
+        self.layout.addWidget(self.submitButton)
+
+    def submitButtonClicked(self):
+        global game
+        if game.activeTurn.checkMove(game.players[self.playerNumber]):
+            game.activeTurn.addToPlayerBoard(game.players[self.playerNumber])
+            print(game.players[game.activePlayer].red)
+            self.updateGameBoardGUI()
+            nextTurn()
+        else:
+            game.newTurn()
+
 
     def boardNumberedColoredButtonClicked(self, number, color):
         global game
-        game.players[self.playerNumber].setColoredNumber(color, number)
-        print(game.players[self.playerNumber].red)
-        self.updateGameBoardGUI()
+        # game.players[self.playerNumber].setColoredNumber(color, number)
+        # print(game.players[self.playerNumber].red)
+        game.activeTurn.addToMove(color, number)
+
 
     def updateGameBoardGUI(self):
         board = game.players[self.playerNumber]
@@ -159,11 +174,25 @@ def startUp():
     global game, diceGUI, boardsGUI
     game = Game()
     diceGUI = DiceRoll()
-    boardsGUI.append(GameBoard(0))
-    game.addPlayer()
+    game.newTurn()
+    game.activePlayer = 0
     diceGUI.show()
-    boardsGUI[0].show()
+    for i in range(2):
+        boardsGUI.append(GameBoard(i))
+        boardsGUI[i].show()
+        game.addPlayer()
     diceGUI.updateDiceGUI()
+
+def nextTurn():
+    game.activePlayer = len(game.players) % (game.activePlayer + 1)
+    diceGUI.updateDiceGUI()
+    game.newTurn()
+
+
+
+
+
+
 
 
 if __name__ == "__main__":
