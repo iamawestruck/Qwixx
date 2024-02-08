@@ -5,6 +5,7 @@ class Player:
     green = None
     blue = None
     penalty = None
+    finalScore = None
 
     def __init__(self):
         self.red = []
@@ -12,6 +13,7 @@ class Player:
         self.green = []
         self.blue = []
         self.penalty = 0
+        self.finalScore = 0
 
     def setColoredNumber(self, color, number):
         if self.verifyColoredNumber(color, number):

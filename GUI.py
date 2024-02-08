@@ -6,6 +6,7 @@ from game import Game
 game = None
 diceGUI = None
 boardsGUI = []
+playerNumberGUI = None
 
 
 class GameBoard(QtWidgets.QWidget):
@@ -87,20 +88,42 @@ class GameBoard(QtWidgets.QWidget):
         self.layout.addWidget(self.submitButton)
 
     def submitButtonClicked(self):
-        global game
-        if game.activeTurn.checkMove(game.players[self.playerNumber]):
-            game.activeTurn.addToPlayerBoard(game.players[self.playerNumber])
-            print(game.players[game.activePlayer].red)
-            self.updateGameBoardGUI()
-            nextTurn()
+        global game, boardsGUI
+        if game.activeTurn.isActive:
+            if game.activeTurn.checkMove(game.players[self.playerNumber]):
+                if game.activeTurn.hasAMove():
+                    game.activePlayerMadeMove = True
+                game.activeTurn.addToPlayerBoard(game.players[self.playerNumber])
+                self.updateGameBoardGUI()
+                game.newTurn(False)
+            else:
+                game.newTurn()
         else:
-            game.newTurn()
+            if game.activeTurn.checkMove(game.players[self.playerNumber]):
+                if game.activeTurn.hasAMove():
+                    game.activePlayerMadeMove = True
+                else:
+                    if game.playerWithPriority == game.activePlayer and not game.activePlayerMadeMove:
+
+                        game.players[game.activePlayer].penalty += 5
+                game.activeTurn.addToPlayerBoard(game.players[self.playerNumber])
+                self.updateGameBoardGUI()
+                game.playerWithPriority = (game.playerWithPriority + 1) % len(game.players)
+                game.newTurn(False)
+                if game.playerWithPriority == game.activePlayer:
+                    self.setDisabled(True)
+                    nextTurn()
+                else:
+                    boardsGUI[game.playerWithPriority].setEnabled(True)
+                    self.setDisabled(True)
+            else:
+                game.newTurn(False)
+
+
 
 
     def boardNumberedColoredButtonClicked(self, number, color):
         global game
-        # game.players[self.playerNumber].setColoredNumber(color, number)
-        # print(game.players[self.playerNumber].red)
         game.activeTurn.addToMove(color, number)
 
 
@@ -118,6 +141,55 @@ class GameBoard(QtWidgets.QWidget):
         blueButtonGroupChildren = self.blueButtonGroup.children()
         for value in board.blue:
             blueButtonGroupChildren[13-value].setStyleSheet("background-color : #0e4458")
+
+
+class PlayerCountPopUp(QtWidgets.QWidget):
+    def __init__(self):
+        super().__init__()
+
+        self.text = QtWidgets.QLabel("How many players will be joining?",
+                                     alignment=QtCore.Qt.AlignCenter)
+
+        self.button1 = QtWidgets.QPushButton("2 Players")
+        self.button2 = QtWidgets.QPushButton("3 Players")
+        self.button3 = QtWidgets.QPushButton("4 Players")
+        self.button4 = QtWidgets.QPushButton("5 Players")
+
+        self.button1.clicked.connect(lambda: self.startGame(2))
+        self.button2.clicked.connect(lambda: self.startGame(3))
+        self.button3.clicked.connect(lambda: self.startGame(4))
+        self.button4.clicked.connect(lambda: self.startGame(5))
+
+        self.layout = QtWidgets.QVBoxLayout(self)
+        self.layout.addWidget(self.text)
+
+        self.upperButtons = QtWidgets.QWidget()
+        self.lowerButtons = QtWidgets.QWidget()
+        self.upperButtons.layout = QtWidgets.QHBoxLayout(self.upperButtons)
+        self.lowerButtons.layout = QtWidgets.QHBoxLayout(self.lowerButtons)
+        self.upperButtons.layout.addWidget(self.button1)
+        self.upperButtons.layout.addWidget(self.button2)
+        self.lowerButtons.layout.addWidget(self.button3)
+        self.lowerButtons.layout.addWidget(self.button4)
+
+        self.layout.addWidget(self.upperButtons)
+        self.layout.addWidget(self.lowerButtons)
+
+    def startGame(self, playerCount):
+        global game, boardsGUI, diceGUI
+        for i in range(playerCount):
+            boardsGUI.append(GameBoard(i))
+            boardsGUI[i].show()
+            game.addPlayer()
+        game.activePlayer = random.randint(0, playerCount-1)
+        game.playerWithPriority = game.activePlayer
+        game.activePlayerMadeSecondMove = False
+        setActivePlayer()
+        diceGUI.show()
+        diceGUI.updateDiceGUI()
+        diceGUI.setDisabled(True)
+        game.newTurn()
+        self.hide()
 
 
 class DiceRoll(QtWidgets.QWidget):
@@ -168,32 +240,93 @@ class DiceRoll(QtWidgets.QWidget):
             else:
                 self.diceButtons[i].setText("")
                 self.diceButtons[i].setStyleSheet("background-color: #333333")
+        setActivePlayer()
+        self.setDisabled(True)
+
 
 
 def startUp():
-    global game, diceGUI, boardsGUI
+    global game, diceGUI, boardsGUI, playerNumberGUI
     game = Game()
     diceGUI = DiceRoll()
-    game.newTurn()
-    game.activePlayer = 0
-    diceGUI.show()
-    for i in range(2):
-        boardsGUI.append(GameBoard(i))
-        boardsGUI[i].show()
-        game.addPlayer()
-    diceGUI.updateDiceGUI()
+    playerNumberGUI = PlayerCountPopUp()
+    playerNumberGUI.show()
 
+# def rotateTurnWithoutDiceRoll():
+#     # gotta restructure this to work asynchronously (with slots)
+#     global game, boardsGUI
+#     previousActivePlayer = game.activePlayer
+#     currentActivePlayer = len(game.players) % (game.activePlayer + 1)
+#     while currentActivePlayer != game.activePlayer:
+#         boardsGUI[previousActivePlayer].setDisabled(True)
+#         boardsGUI[currentActivePlayer].setEnabled(True)
+#         game.activeTurn = game.Turn(game.dice, False)
+#         previousActivePlayer = currentActivePlayer
+#         currentActivePlayer = len(game.players) % (game.activePlayer + 1)
 def nextTurn():
-    game.activePlayer = len(game.players) % (game.activePlayer + 1)
-    diceGUI.updateDiceGUI()
+    checkForLockedRows()
+    if gameEnded():
+        calculateFinalScore()
+    game.activePlayer = (game.activePlayer + 1) % len(game.players)
+    game.playerWithPriority = game.activePlayer
+    game.activePlayerMadeMove = False
+    diceGUI.setEnabled(True)
     game.newTurn()
 
+def checkForLockedRows():
+    for player in game.players:
+        if 12 in player.red:
+            game.dice[2] = None
+        if 12 in player.yellow:
+            game.dice[3] = None
+        if 2 in player.green:
+            game.dice[4] = None
+        if 2 in player.blue:
+            game.dice[5] = None
+def gameEnded():
+    global game
+    count = 0
+    for i in range(2, 6):
+        if game.dice[i] is None:
+            count += 1
+    if count >= 2:
+        return True
+    for player in game.players:
+        if player.penalty >= 20:
+            return True
+    return False
 
+def calculateFinalScore():
+    global game
+    topScoringPlayer = game.players[0]
+    topScoringPlayerNum = 1
+    playerNum = 1
+    for player in game.players:
+        player.finalScore += game.scoreDictionary[len(player.red)]
+        player.finalScore += game.scoreDictionary[len(player.yellow)]
+        player.finalScore += game.scoreDictionary[len(player.green)]
+        player.finalScore += game.scoreDictionary[len(player.blue)]
+        player.finalScore -= player.penalty
+        if player.finalScore > topScoringPlayer.finalScore:
+            topScoringPlayer = player
+            topScoringPlayerNum = playerNum
+        playerNum += 1
+    messageBox = QtWidgets.QMessageBox()
+    messageBox.setText(f"Player {topScoringPlayerNum} Wins! Final Score: {topScoringPlayer.finalScore}")
+    messageBox.buttonClicked.connect(endGame)
+    messageBox.exec()
 
+def endGame():
+    app.exit()
 
+def setActivePlayer():
+    global game, boardsGUI
 
-
-
+    for i in range(len(boardsGUI)):
+        if i != game.activePlayer:
+            boardsGUI[i].setDisabled(True)
+        else:
+            boardsGUI[i].setEnabled(True)
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication([])
