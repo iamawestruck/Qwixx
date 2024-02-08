@@ -86,6 +86,7 @@ class GameBoard(QtWidgets.QWidget):
         self.layout.addWidget(self.greenButtonGroup)
         self.layout.addWidget(self.blueButtonGroup)
         self.layout.addWidget(self.submitButton)
+        self.setWindowTitle(f"Player {playerNumber+1}")
 
     def submitButtonClicked(self):
         global game, boardsGUI
@@ -235,7 +236,8 @@ class DiceRoll(QtWidgets.QWidget):
         global game
         game.rollDice()
         for i in range(len(self.diceButtons)):
-            if self.diceButtons[i] != None:
+            print(self.diceButtons)
+            if game.dice[i] != None:
                 self.diceButtons[i].setText(str(game.dice[i]))
             else:
                 self.diceButtons[i].setText("")

@@ -30,7 +30,9 @@ class Game:
         self.players.append(Player())
 
     def rollDice(self):
-        self.dice = [random.randint(1, 6) for i in range(6) if self.dice[i] is not None]
+        for i in range(len(self.dice)):
+            if self.dice[i] != None:
+                self.dice[i] = random.randint(1, 6)
 
     def newTurn(self, isActive=True):
         self.activeTurn = Turn(self.dice, isActive)
@@ -103,12 +105,20 @@ class Turn:
         if self.isActive:
             match color:
                 case "red":
+                    if self.dice[2] is None:
+                        return False
                     return self.dice[0] + self.dice[2] == number or self.dice[1] + self.dice[2] == number
                 case "yellow":
+                    if self.dice[3] is None:
+                        return False
                     return self.dice[0] + self.dice[3] == number or self.dice[1] + self.dice[3] == number
                 case "green":
+                    if self.dice[4] is None:
+                        return False
                     return self.dice[0] + self.dice[4] == number or self.dice[1] + self.dice[4] == number
                 case "blue":
+                    if self.dice[5] is None:
+                        return False
                     return self.dice[0] + self.dice[5] == number or self.dice[1] + self.dice[5] == number
         else:
             return self.dice[0] + self.dice[1] == number
